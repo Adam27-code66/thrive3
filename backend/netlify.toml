@@ -1,0 +1,18 @@
+[build]
+  # Install Python dependencies before Netlify bundles the functions
+  command = "pip install -r requirements.txt"
+  # Tell Netlify where the serverless functions live
+  functions = "netlify/functions"
+  # No static site output for the backend
+  publish = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
+
+# Redirect every request to the single serverless function.
+# :splat captures the full path so FastAPI routing works correctly.
+[[redirects]]
+  from   = "/*"
+  to     = "/.netlify/functions/api/:splat"
+  status = 200
+  force  = true
