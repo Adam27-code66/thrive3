@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Search, Shield, Globe, Link2, MessageSquare, Cpu, Terminal } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 
 export default function LandingPage() {
   const capabilities = [
@@ -40,47 +40,62 @@ export default function LandingPage() {
     <div className="bg-[#FBFBF9] min-h-screen text-neutral-900">
 
       {/* ================================================================
-          HERO SECTION (Editorial, Airy Layout with 40%+ Whitespace)
+          HERO SECTION (Airy Split-Grid with Right-Half Editorial Visual)
       ================================================================ */}
-      <section className="px-6 lg:px-12 pt-20 pb-32 max-w-7xl mx-auto flex flex-col justify-center min-h-[80vh]">
-        <div className="max-w-4xl space-y-8 animate-fade-in">
+      <section className="px-6 lg:px-12 pt-16 pb-24 max-w-7xl mx-auto min-h-[85vh] flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
 
-          {/* Micro Category Tag */}
-          <div className="inline-flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-neutral-900" />
-            <span className="text-xs uppercase tracking-widest font-mono text-neutral-500 font-medium">
-              Security Operations & Telemetry
-            </span>
+          {/* Left Hero Content (7 Cols) */}
+          <div className="lg:col-span-7 space-y-8 animate-fade-in">
+            {/* Micro Category Label */}
+            <div className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-neutral-900" />
+              <span className="text-xs uppercase tracking-widest font-mono text-neutral-500 font-medium">
+                Security Operations & Telemetry
+              </span>
+            </div>
+
+            {/* Large Thin Headline in Playfair Display / Fraunces */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal font-serif text-neutral-900 tracking-tight leading-[1.08]">
+              Explainable Phishing Investigation & Incident Response
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg text-neutral-600 font-sans max-w-xl leading-relaxed">
+              A minimalist, deterministic security platform engineered to evaluate email payloads, expose deceptive brand homoglyphs, and deliver transparent forensic verdicts.
+            </p>
+
+            {/* CTAs: Single Solid Dark Button */}
+            <div className="flex flex-wrap items-center gap-6 pt-4">
+              <Link
+                to="/analyzer"
+                className="btn-editorial-primary text-sm px-8 py-4"
+              >
+                <Search className="w-4 h-4" />
+                Start Investigation
+              </Link>
+
+              <Link
+                to="/dashboard"
+                className="btn-editorial-secondary text-sm flex items-center gap-2 py-4"
+              >
+                Explore SOC Dashboard
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
 
-          {/* Large Thin Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light font-serif text-neutral-900 tracking-tight leading-[1.1]">
-            Explainable Phishing Investigation & Incident Response
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-lg text-neutral-600 font-sans max-w-2xl leading-relaxed font-normal">
-            A minimalist, deterministic security platform engineered to evaluate email payloads, expose deceptive brand homoglyphs, and deliver transparent forensic verdicts.
-          </p>
-
-          {/* CTAs: Exactly ONE Solid Dark Button */}
-          <div className="flex flex-wrap items-center gap-6 pt-4">
-            <Link
-              to="/analyzer"
-              className="btn-editorial-primary text-sm px-8 py-4"
-            >
-              <Search className="w-4 h-4" />
-              Start Investigation
-            </Link>
-
-            <Link
-              to="/dashboard"
-              className="btn-editorial-secondary text-sm flex items-center gap-2 py-4"
-            >
-              Explore SOC Dashboard
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+          {/* Right Hero Image (5 Cols - Editorial Abstract Network Image) */}
+          <div className="lg:col-span-5 animate-fade-in delay-200">
+            <div className="relative overflow-hidden bg-[#F4F4F0] p-2 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] flex items-center justify-center">
+              <img
+                src="/landing_hero.png"
+                alt="Editorial Abstract Network Data Visualization"
+                className="w-full h-full object-cover grayscale contrast-[1.05] opacity-90 transition-transform duration-700 hover:scale-105"
+              />
+            </div>
           </div>
+
         </div>
       </section>
 
@@ -124,7 +139,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {capabilities.map((item, idx) => (
-            <div key={idx} className="space-y-3 p-8 bg-white transition-colors duration-200 hover:bg-[#F4F4F0]">
+            <div key={idx} className="space-y-3 p-8 bg-white transition-all duration-200 hover:bg-[#F4F4F0]">
               <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 block">
                 0{idx + 1} · {item.label}
               </span>

@@ -8,6 +8,19 @@ import {
   BarChart, Bar, XAxis, YAxis
 } from 'recharts';
 
+const CUSTOM_LIGHT_TOOLTIP_STYLE = {
+  contentStyle: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5E0',
+    border: '1px solid #E5E5E0',
+    fontSize: '12px',
+    fontFamily: 'JetBrains Mono, monospace',
+    color: '#111111',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+  },
+  itemStyle: { color: '#111111' },
+};
+
 export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +56,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FBFBF9] flex items-center justify-center p-6 font-mono text-xs text-neutral-400">
-        <Loader2 className="w-6 h-6 animate-spin text-neutral-900 mr-2" />
+        <Loader2 className="w-5 h-5 animate-spin text-neutral-900 mr-2" />
         <span>Loading Executive Telemetry...</span>
       </div>
     );
@@ -53,9 +66,10 @@ export default function DashboardPage() {
   const recentIncidents = data?.recent_incidents || [];
   const topTargetBrands = data?.top_target_brands || [];
 
+  // Muted, non-neon chart colors
   const verdictData = [
     { name: 'Phishing', value: overview.verdict_counts?.['LIKELY PHISHING'] || 0, color: '#DC2626' },
-    { name: 'Suspicious', value: overview.verdict_counts?.['SUSPICIOUS'] || 0, color: '#EA580C' },
+    { name: 'Suspicious', value: overview.verdict_counts?.['SUSPICIOUS'] || 0, color: '#D97706' },
     { name: 'Safe', value: overview.verdict_counts?.['SAFE'] || 0, color: '#16A34A' },
   ];
 
@@ -63,14 +77,14 @@ export default function DashboardPage() {
     <div className="bg-[#FBFBF9] min-h-screen py-16 px-6 lg:px-12 space-y-16 animate-fade-in">
       <div className="max-w-7xl mx-auto space-y-12">
 
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E5E5E0] pb-6">
           <div className="space-y-2">
             <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-              Executive Briefing
+              Executive Briefing & Telemetry
             </span>
-            <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
-              Threat & Incident Telemetry
+            <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
+              SOC Threat Dashboard
             </h1>
           </div>
 
@@ -112,41 +126,43 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Charts & Analytics Section */}
+        {/* Muted Charts Section (No Neon, Light Minimal Styling) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Verdict Distribution */}
           <div className="lg:col-span-5 p-8 bg-white space-y-4">
             <div className="border-b border-[#F4F4F0] pb-3">
               <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Verdict Breakdown
+                Verdict Distribution
               </span>
               <h3 className="text-xl font-normal font-serif text-neutral-900">
                 Threat Classification
               </h3>
             </div>
 
-            <div className="h-56">
+            <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={verdictData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
+                    innerRadius={60}
+                    outerRadius={85}
                     dataKey="value"
+                    stroke="#FFFFFF"
+                    strokeWidth={2}
                   >
                     {verdictData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip {...CUSTOM_LIGHT_TOOLTIP_STYLE} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="flex items-center justify-around font-mono text-xs text-neutral-600 pt-2 border-t border-[#F4F4F0]">
+            <div className="flex items-center justify-around font-mono text-xs text-neutral-600 pt-3 border-t border-[#F4F4F0]">
               {verdictData.map((v, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: v.color }} />
@@ -160,20 +176,27 @@ export default function DashboardPage() {
           <div className="lg:col-span-7 p-8 bg-white space-y-4">
             <div className="border-b border-[#F4F4F0] pb-3">
               <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Brand Impersonation
+                Brand Intelligence
               </span>
               <h3 className="text-xl font-normal font-serif text-neutral-900">
                 Top Targeted Brands
               </h3>
             </div>
 
-            <div className="h-56">
+            <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={topTargetBrands} layout="vertical">
                   <XAxis type="number" hide />
-                  <YAxis dataKey="brand" type="category" axisLine={false} tickLine={false} width={100} style={{ fontSize: '12px', fontFamily: 'JetBrains Mono' }} />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#111111" radius={[0, 2, 2, 0]} barSize={16} />
+                  <YAxis
+                    dataKey="brand"
+                    type="category"
+                    axisLine={false}
+                    tickLine={false}
+                    width={110}
+                    style={{ fontSize: '12px', fontFamily: 'JetBrains Mono', fill: '#111111' }}
+                  />
+                  <Tooltip {...CUSTOM_LIGHT_TOOLTIP_STYLE} />
+                  <Bar dataKey="count" fill="#18181B" radius={[0, 2, 2, 0]} barSize={14} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -185,7 +208,7 @@ export default function DashboardPage() {
         <div className="p-8 bg-white space-y-6">
           <div className="border-b border-[#F4F4F0] pb-4">
             <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-              Live Threat Ledger
+              Live Threat Directory
             </span>
             <h3 className="text-2xl font-normal font-serif text-neutral-900">
               Recent SOC Incident Directory

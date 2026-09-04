@@ -16,9 +16,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .font-serif {
+    font-family: 'Playfair Display', 'Fraunces', Georgia, serif;
+  }
+
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', 'Courier Prime', monospace;
   }
+
 
   * {
     box-sizing: border-box;
