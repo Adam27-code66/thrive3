@@ -80,6 +80,8 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
             "id": inc.id,
             "incident_id": inc.incident_id,
             "sender": inc.sender,
+            "recipient": inc.recipient,
+            "subject": inc.subject,
             "domain": inc.domain,
             "detected_brand": inc.detected_brand,
             "risk_score": inc.risk_score,
