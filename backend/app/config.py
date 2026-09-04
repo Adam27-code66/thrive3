@@ -11,9 +11,10 @@ class Settings:
     # In production set CORS_ORIGINS env var to your Vercel URL, e.g.:
     # https://thrive3.vercel.app,https://thrive3-git-main-adam27.vercel.app
     _cors_env = os.getenv("CORS_ORIGINS", "")
+    _parsed = [o.strip().rstrip("/") for o in _cors_env.split(",") if o.strip()]
     CORS_ORIGINS: list = (
-        [o.strip() for o in _cors_env.split(",") if o.strip()]
-        if _cors_env
+        _parsed
+        if _parsed
         else [
             "http://localhost:5173",
             "http://127.0.0.1:5173",
@@ -21,6 +22,7 @@ class Settings:
             "*",
         ]
     )
+
 
 settings = Settings()
 
