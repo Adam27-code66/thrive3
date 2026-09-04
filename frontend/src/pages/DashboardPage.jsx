@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { getDashboardStats, resetSeedData } from '../services/api';
 import DashboardCard from '../components/DashboardCard';
 import IncidentTable from '../components/IncidentTable';
-import { RefreshCw, Loader2 } from 'lucide-react';
+import { RefreshCw, Loader2, TrendingUp, ShieldAlert, Globe, AlertTriangle } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis
+  BarChart, Bar, XAxis, YAxis, AreaChart, Area, CartesianGrid
 } from 'recharts';
 
 const CUSTOM_LIGHT_TOOLTIP_STYLE = {
@@ -16,7 +16,7 @@ const CUSTOM_LIGHT_TOOLTIP_STYLE = {
     fontSize: '12px',
     fontFamily: 'JetBrains Mono, monospace',
     color: '#111111',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
     borderRadius: '0px',
   },
   itemStyle: { color: '#111111' },
@@ -74,6 +74,8 @@ export default function DashboardPage() {
   const summary = data?.summary || {};
   const recentIncidents = data?.recent_incidents || [];
   const topSuspiciousDomains = data?.top_suspicious_domains || [];
+  const threatsOverTime = data?.threats_over_time || [];
+  const commonIndicators = data?.common_indicators || [];
 
   // Muted, non-neon threat distribution
   const threatDistribution = (data?.threat_distribution || []).map(item => ({
@@ -81,7 +83,9 @@ export default function DashboardPage() {
     color: COLOR_MAP[item.name] || item.color || '#18181B',
   }));
 
-  const activeThreatData = threatDistribution.filter(item => item.value > 0);
+  const totalIncidents = summary.total_analyzed || 1;
+  const maxDomainCount = Math.max(...topSuspiciousDomains.map(d => d.count || 1), 1);
+  const maxIndicatorCount = Math.max(...commonIndicators.map(i => i.count || 1), 1);
 
   return (
     <div className="bg-[#FBFBF9] min-h-screen py-16 px-6 lg:px-12 space-y-16 animate-fade-in">
@@ -136,71 +140,135 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Muted Charts Section (No Neon, Light Editorial Styling) */}
+        {/* Primary Visual Analytics Section: 7-Day Ingestion Velocity */}
+        <div className="p-8 bg-white space-y-6">
+          <div className="flex items-center justify-between border-b border-[#F4F4F0] pb-4">
+            <div>
+              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
+                Telemetry Velocity
+              </span>
+              <h3 className="text-2xl font-normal font-serif text-neutral-900 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-neutral-500" />
+                7-Day Ingestion & Incident Volume
+              </h3>
+            </div>
+            <span className="text-xs font-mono text-neutral-400">Past 7 Days</span>
+          </div>
+
+          <div className="w-full relative" style={{ height: '220px', minHeight: '220px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={threatsOverTime} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorIncidents" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#18181B" stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor="#18181B" stopOpacity={0.0}/>
+                  </linearGradient>
+                  <linearGradient id="colorCritical" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#DC2626" stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor="#DC2626" stopOpacity={0.0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#F4F4F0" vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: '#737373' }}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: '#737373' }}
+                  allowDecimals={false}
+                />
+                <Tooltip {...CUSTOM_LIGHT_TOOLTIP_STYLE} />
+                <Area type="monotone" dataKey="incidents" name="Total Payloads" stroke="#18181B" strokeWidth={2} fillOpacity={1} fill="url(#colorIncidents)" />
+                <Area type="monotone" dataKey="critical" name="Critical Threats" stroke="#DC2626" strokeWidth={2} fillOpacity={1} fill="url(#colorCritical)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Secondary Visual Charts: Verdict Classification & Domain Intelligence */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* Verdict Distribution */}
-          <div className="lg:col-span-5 p-8 bg-white space-y-4">
+          {/* Verdict Distribution Donut Chart + Visual Breakdown */}
+          <div className="lg:col-span-6 p-8 bg-white space-y-6">
             <div className="border-b border-[#F4F4F0] pb-3">
               <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Verdict Distribution
+                Threat Matrix
               </span>
-              <h3 className="text-xl font-normal font-serif text-neutral-900">
+              <h3 className="text-xl font-normal font-serif text-neutral-900 flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-neutral-600" />
                 Threat Classification
               </h3>
             </div>
 
-            <div className="h-60 flex items-center justify-center">
-              {activeThreatData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={threatDistribution}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={85}
-                      dataKey="value"
-                      stroke="#FFFFFF"
-                      strokeWidth={2}
-                    >
-                      {threatDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip {...CUSTOM_LIGHT_TOOLTIP_STYLE} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-xs font-mono text-neutral-400">No threat distribution telemetry</div>
-              )}
+            {/* Visual Recharts Pie Chart Container */}
+            <div className="w-full relative" style={{ height: '200px', minHeight: '200px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={threatDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={75}
+                    dataKey="value"
+                    stroke="#FFFFFF"
+                    strokeWidth={2}
+                  >
+                    {threatDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip {...CUSTOM_LIGHT_TOOLTIP_STYLE} />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
 
-            <div className="flex flex-wrap items-center justify-around font-mono text-xs text-neutral-600 pt-3 border-t border-[#F4F4F0] gap-2">
-              {threatDistribution.map((v, i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: v.color }} />
-                  <span>{v.name}: {v.value}</span>
-                </div>
-              ))}
+            {/* Visual Progress Bar Breakdown for absolute reliability */}
+            <div className="space-y-3 pt-4 border-t border-[#F4F4F0] font-mono text-xs">
+              {threatDistribution.map((item, idx) => {
+                const percent = Math.round((item.value / totalIncidents) * 100) || 0;
+                return (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex items-center justify-between text-neutral-700">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                        {item.name}
+                      </span>
+                      <span>{item.value} ({percent}%)</span>
+                    </div>
+                    <div className="w-full bg-[#F4F4F0] h-1.5 rounded-full overflow-hidden">
+                      <div
+                        className="h-full transition-all duration-500"
+                        style={{ width: `${percent}%`, backgroundColor: item.color }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Top Impersonated / Suspicious Domains */}
-          <div className="lg:col-span-7 p-8 bg-white space-y-4">
+          {/* Top Targeted Domains Bar Chart + Visual Bars */}
+          <div className="lg:col-span-6 p-8 bg-white space-y-6">
             <div className="border-b border-[#F4F4F0] pb-3">
               <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
                 Domain Intelligence
               </span>
-              <h3 className="text-xl font-normal font-serif text-neutral-900">
-                Top Targeted Brands & Domains
+              <h3 className="text-xl font-normal font-serif text-neutral-900 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-neutral-600" />
+                Top Targeted Domains & Impersonated Brands
               </h3>
             </div>
 
-            <div className="h-60 flex items-center justify-center">
+            {/* Recharts Bar Chart Container */}
+            <div className="w-full relative" style={{ height: '200px', minHeight: '200px' }}>
               {topSuspiciousDomains.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topSuspiciousDomains} layout="vertical" margin={{ left: 10, right: 20, top: 10, bottom: 10 }}>
+                  <BarChart data={topSuspiciousDomains} layout="vertical" margin={{ left: 10, right: 20, top: 0, bottom: 0 }}>
                     <XAxis type="number" hide />
                     <YAxis
                       dataKey="domain"
@@ -215,12 +283,72 @@ export default function DashboardPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-xs font-mono text-neutral-400">No domain threats logged</div>
+                <div className="h-full flex items-center justify-center text-xs font-mono text-neutral-400">
+                  No suspicious domain data logged
+                </div>
               )}
+            </div>
+
+            {/* Visual Frequency Progress Bar List */}
+            <div className="space-y-3 pt-4 border-t border-[#F4F4F0] font-mono text-xs">
+              {topSuspiciousDomains.slice(0, 4).map((d, i) => {
+                const fillPercent = Math.round((d.count / maxDomainCount) * 100);
+                return (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between text-neutral-700">
+                      <span className="truncate max-w-[200px]">{d.domain}</span>
+                      <span className="text-neutral-500">{d.count} flags</span>
+                    </div>
+                    <div className="w-full bg-[#F4F4F0] h-1.5 rounded-full overflow-hidden">
+                      <div
+                        className="bg-[#18181B] h-full transition-all duration-500"
+                        style={{ width: `${fillPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
         </div>
+
+        {/* Common IOC Indicators Bar Panel */}
+        {commonIndicators.length > 0 && (
+          <div className="p-8 bg-white space-y-4">
+            <div className="border-b border-[#F4F4F0] pb-3">
+              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
+                Forensic Pattern Analysis
+              </span>
+              <h3 className="text-xl font-normal font-serif text-neutral-900 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-neutral-600" />
+                Frequently Triggered Threat Indicators
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+              {commonIndicators.map((ind, idx) => {
+                const ratio = Math.round((ind.count / maxIndicatorCount) * 100);
+                return (
+                  <div key={idx} className="p-4 bg-[#FBFBF9] border border-[#F4F4F0] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono">
+                      <span className="font-medium text-neutral-900 truncate max-w-[180px]" title={ind.indicator}>
+                        {ind.indicator}
+                      </span>
+                      <span className="text-neutral-500">{ind.count} hits</span>
+                    </div>
+                    <div className="w-full bg-[#E5E5E0] h-1 rounded-full overflow-hidden">
+                      <div
+                        className="bg-[#DC2626] h-full transition-all duration-500"
+                        style={{ width: `${ratio}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Expandable Incident Ledger Table */}
         <div className="p-8 bg-white space-y-6">
@@ -240,3 +368,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
