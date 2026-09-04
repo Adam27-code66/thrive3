@@ -43,6 +43,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Vercel Path Rewriting Middleware
+@app.middleware("http")
+async def fix_api_index_path(request, call_next):
+    path = request.url.path
+    if path == "/api/index" or path == "/api/index/":
+        request.scope["path"] = "/"
+    elif path.startswith("/api/index/"):
+        request.scope["path"] = path[10:]  # Strip '/api/index'
+    elif path.startswith("/api/"):
+        request.scope["path"] = path[4:]   # Strip '/api'
+    return await call_next(request)
+
+
 # Register Routers
 app.include_router(analyze_router)
 app.include_router(incidents_router)
