@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import jsPDF from 'jspdf';
-import { Download, FileJson, Printer, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react';
+import { Download, FileJson, Shield, FileText } from 'lucide-react';
 import ThreatBadge from './ThreatBadge';
 import { getReportJsonUrl } from '../services/api';
 
@@ -184,65 +184,95 @@ export default function ReportPreview({ result }) {
   const jsonUrl = getReportJsonUrl(result.incident_id);
 
   return (
-    <div className="glass-panel rounded-2xl p-6 border border-slate-800 space-y-6">
-      
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
+    >
+      {/* Header */}
+      <div
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-6 py-5"
+        style={{
+          background: 'linear-gradient(90deg, #0d1424, #0a1020)',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+        }}
+      >
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-cyan-950/50 border border-cyan-500/30 text-cyan-400">
-            <FileText className="w-6 h-6" />
+          <div
+            className="p-2.5 rounded-xl"
+            style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)' }}
+          >
+            <FileText className="w-5 h-5 text-emerald-400" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">
-              Automatic Incident Report & Export
-            </h2>
-            <p className="text-xs text-slate-400 font-mono">
+            <h2 className="text-lg font-bold text-white">Automatic Incident Report & Export</h2>
+            <p className="text-xs font-mono mt-0.5" style={{ color: '#475569' }}>
               Complete SOC forensic dossier ready for distribution
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={downloadPDF}
             disabled={isGenerating}
-            className="px-4 py-2 rounded-xl text-xs font-mono font-bold text-white bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 border border-cyan-500/30 flex items-center gap-2 shadow-lg shadow-cyan-950/50 active:scale-95 transition-all"
+            className="btn-primary"
+            style={{ padding: '8px 16px', fontSize: '12px' }}
           >
             <Download className="w-4 h-4" />
-            <span>{isGenerating ? 'Generating PDF...' : 'Download PDF Report'}</span>
+            {isGenerating ? 'Generating...' : 'Download PDF'}
           </button>
 
           <a
             href={jsonUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 rounded-xl text-xs font-mono font-bold text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700 flex items-center gap-2 transition-all"
+            className="btn-secondary"
+            style={{ padding: '8px 14px', fontSize: '12px' }}
           >
-            <FileJson className="w-4 h-4 text-purple-400" />
-            <span>Export JSON</span>
+            <FileJson className="w-4 h-4" style={{ color: '#a5b4fc' }} />
+            Export JSON
           </a>
         </div>
       </div>
 
-      {/* Recommended Security Actions Section */}
-      <div className="bg-slate-950/80 p-5 rounded-xl border border-slate-800 space-y-3">
-        <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-slate-300 flex items-center gap-2">
+      {/* Recommendations */}
+      <div className="p-6 space-y-4" style={{ background: '#090d18' }}>
+        <div className="flex items-center gap-2 mb-4">
           <Shield className="w-4 h-4 text-emerald-400" />
-          <span>Recommended Security Mitigation Actions</span>
-        </h3>
-        
-        <div className="space-y-2 font-mono text-xs">
+          <h3
+            className="text-xs font-bold uppercase tracking-wider font-mono"
+            style={{ color: '#475569' }}
+          >
+            Recommended Security Mitigation Actions
+          </h3>
+        </div>
+
+        <div className="space-y-2">
           {result.recommendation?.map((action, idx) => (
-            <div key={idx} className="flex items-start gap-2.5 text-slate-300 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
-              <span className="p-1 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
-                STEP {idx + 1}
+            <div
+              key={idx}
+              className="flex items-start gap-3 rounded-xl p-3.5"
+              style={{
+                background: 'rgba(16,185,129,0.04)',
+                border: '1px solid rgba(16,185,129,0.12)',
+              }}
+            >
+              <span
+                className="flex-shrink-0 px-2 py-0.5 rounded text-[9px] font-bold font-mono uppercase"
+                style={{
+                  background: 'rgba(16,185,129,0.15)',
+                  color: '#34d399',
+                  border: '1px solid rgba(16,185,129,0.25)',
+                  marginTop: '1px',
+                }}
+              >
+                {idx + 1}
               </span>
-              <span className="leading-relaxed">{action}</span>
+              <span className="text-sm text-slate-300 leading-relaxed">{action}</span>
             </div>
           ))}
         </div>
       </div>
-
     </div>
   );
 }

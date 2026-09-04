@@ -16,10 +16,9 @@ export default function App() {
   return (
     <AnalysisProvider>
       <Router>
-        <div className="min-h-screen flex flex-col bg-[#070a12] text-slate-100 selection:bg-cyan-500 selection:text-black">
+        <div className="min-h-screen flex flex-col" style={{ background: 'var(--color-bg-deep)', color: '#e2e8f0' }}>
           <Navbar />
-          
-          <main className="flex-1 px-4 lg:px-8 max-w-7xl mx-auto w-full">
+          <main className="flex-1">
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/analyzer" element={<AnalyzerPage />} />
@@ -30,7 +29,6 @@ export default function App() {
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </main>
-
           <Footer />
         </div>
       </Router>

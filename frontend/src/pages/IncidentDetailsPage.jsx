@@ -7,7 +7,7 @@ import IOCList from '../components/IOCList';
 import ReportPreview from '../components/ReportPreview';
 import EmailPreview from '../components/EmailPreview';
 import IncidentTimeline from '../components/IncidentTimeline';
-import { ArrowLeft, ShieldAlert, Activity, FileText, CheckCircle2, Clock } from 'lucide-react';
+import { ArrowLeft, Activity, Loader2 } from 'lucide-react';
 
 export default function IncidentDetailsPage() {
   const { incidentId } = useParams();
@@ -44,62 +44,97 @@ export default function IncidentDetailsPage() {
 
   if (loading || !incident) {
     return (
-      <div className="py-20 text-center font-mono text-cyan-400 animate-pulse">
-        <Activity className="w-10 h-10 mx-auto mb-2 animate-spin" />
-        <span>Fetching Forensic Incident Record #{incidentId}...</span>
+      <div className="flex items-center justify-center py-32 gap-3">
+        <Loader2 className="w-6 h-6 text-emerald-400" style={{ animation: 'spin 1s linear infinite' }} />
+        <span className="text-sm font-mono" style={{ color: '#475569' }}>
+          Fetching Forensic Incident Record #{incidentId}...
+        </span>
       </div>
     );
   }
 
+  const STATUS_STYLES = {
+    OPEN: { active: { background: 'rgba(239,68,68,0.15)', color: '#f87171', border: '1px solid rgba(239,68,68,0.35)' } },
+    INVESTIGATING: { active: { background: 'rgba(234,179,8,0.15)', color: '#fbbf24', border: '1px solid rgba(234,179,8,0.35)' } },
+    RESOLVED: { active: { background: 'rgba(16,185,129,0.15)', color: '#34d399', border: '1px solid rgba(16,185,129,0.35)' } },
+  };
+
   return (
-    <div className="max-w-7xl mx-auto space-y-8 py-6">
-      
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-8">
+
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <Link to="/incidents" className="text-xs font-mono font-bold text-cyan-400 hover:underline flex items-center gap-1">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-1">
+            <Link
+              to="/incidents"
+              className="flex items-center gap-1 text-[11px] font-mono font-bold transition-colors"
+              style={{ color: '#475569', textDecoration: 'none' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#10b981'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}
+            >
               <ArrowLeft className="w-3.5 h-3.5" />
               Incidents
             </Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-900 text-white font-bold border border-slate-800">
+            <span style={{ color: '#1e293b' }}>/</span>
+            <span
+              className="text-[11px] font-mono font-bold px-2 py-0.5 rounded"
+              style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
               {incident.incident_id}
             </span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight mt-1">
-            INCIDENT DOSSIER #{incident.incident_id}
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            Incident Dossier #{incident.incident_id}
           </h1>
         </div>
 
-        {/* Status Actions */}
-        <div className="flex items-center gap-2 font-mono text-xs">
-          <span className="text-slate-400">SOC Status:</span>
-          {['OPEN', 'INVESTIGATING', 'RESOLVED'].map((st) => (
-            <button
-              key={st}
-              onClick={() => handleStatusToggle(st)}
-              disabled={updating}
-              className={`px-3 py-1.5 rounded-lg border font-bold uppercase transition-all ${
-                incident.status === st
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+        {/* Status Toggle */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono" style={{ color: '#475569' }}>SOC Status:</span>
+          {['OPEN', 'INVESTIGATING', 'RESOLVED'].map((st) => {
+            const isActive = incident.status === st;
+            const activeStyle = STATUS_STYLES[st]?.active || {};
+            return (
+              <button
+                key={st}
+                onClick={() => handleStatusToggle(st)}
+                disabled={updating}
+                className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all"
+                style={isActive ? activeStyle : {
+                  background: 'rgba(255,255,255,0.04)',
+                  color: '#475569',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = '#94a3b8';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = '#475569';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                  }
+                }}
+              >
+                {st}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* 1. Incident Processing Timeline */}
+      {/* Timeline */}
       <IncidentTimeline
         createdAt={incident.created_at}
         riskScore={incident.risk_score}
         severity={incident.severity}
       />
 
-      {/* 2. Main Risk Score Meter */}
+      {/* Risk Score */}
       <RiskScore
         score={incident.risk_score}
         severity={incident.severity}
@@ -108,7 +143,7 @@ export default function IncidentDetailsPage() {
         scoreBreakdown={incident.score_breakdown}
       />
 
-      {/* 3. Evidence */}
+      {/* Evidence */}
       <EvidenceCard
         domainAnalysis={incident.domain_analysis}
         languageAnalysis={incident.language_analysis}
@@ -117,20 +152,19 @@ export default function IncidentDetailsPage() {
         attachmentAnalysis={incident.attachment_analysis}
       />
 
-      {/* 4. IOCs */}
+      {/* IOCs */}
       <IOCList iocs={incident.iocs} />
 
-      {/* 5. Report Preview & Action Mitigations */}
+      {/* Report & Recommendations */}
       <ReportPreview result={incident} />
 
-      {/* 6. Raw Email Viewer */}
+      {/* Raw Email */}
       <EmailPreview
         sender={incident.sender}
         recipient={incident.recipient}
         subject={incident.subject}
         body={incident.body}
       />
-
     </div>
   );
 }
