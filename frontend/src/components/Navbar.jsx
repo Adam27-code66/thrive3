@@ -34,8 +34,8 @@ export default function Navbar() {
             <span className="text-xl font-normal tracking-tight text-neutral-900 font-serif">
               PhishLens
             </span>
-            <span className="text-[10px] uppercase tracking-widest text-neutral-400 font-mono">
-              Editorial Security
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 font-sans font-semibold">
+              EDITORIAL SECURITY
             </span>
           </div>
         </Link>
@@ -48,7 +48,7 @@ export default function Navbar() {
               <Link
                 key={to}
                 to={to}
-                className="text-xs tracking-wider uppercase font-mono py-1 relative transition-colors duration-150"
+                className="text-xs tracking-[0.18em] uppercase font-sans py-1 relative transition-colors duration-150"
                 style={{
                   color: active ? '#111111' : '#737373',
                   fontWeight: active ? 600 : 400,

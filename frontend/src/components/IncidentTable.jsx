@@ -87,14 +87,14 @@ export default function IncidentTable({ incidents = [] }) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-[#E5E5E0] text-[11px] font-mono uppercase tracking-widest text-neutral-400">
-              <th className="py-3 px-4 font-normal">Incident</th>
-              <th className="py-3 px-4 font-normal">Date</th>
-              <th className="py-3 px-4 font-normal">Sender</th>
-              <th className="py-3 px-4 font-normal">Domain</th>
-              <th className="py-3 px-4 font-normal text-center">Score</th>
-              <th className="py-3 px-4 font-normal">Verdict</th>
-              <th className="py-3 px-4 font-normal text-right">Details</th>
+            <tr className="border-b border-[#E5E5E0] text-[11px] font-sans uppercase tracking-[0.18em] text-neutral-400 font-semibold">
+              <th className="py-3 px-4">INCIDENT</th>
+              <th className="py-3 px-4">DATE</th>
+              <th className="py-3 px-4">SENDER</th>
+              <th className="py-3 px-4">DOMAIN</th>
+              <th className="py-3 px-4 text-center">SCORE</th>
+              <th className="py-3 px-4">VERDICT</th>
+              <th className="py-3 px-4 text-right">DETAILS</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E5E5E0]">

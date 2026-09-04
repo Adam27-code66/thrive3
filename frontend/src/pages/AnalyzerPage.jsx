@@ -84,11 +84,11 @@ export default function AnalyzerPage() {
       <div className="max-w-4xl mx-auto space-y-12">
 
         {/* Page Header */}
-        <div className="space-y-3">
-          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-            SOC Investigation Workspace
+        <div className="space-y-2 border-b border-[#E5E5E0] pb-6">
+          <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+            SOC INVESTIGATION WORKSPACE
           </span>
-          <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+          <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
             Analyze Suspicious Email
           </h1>
           <p className="text-sm text-neutral-600 font-sans max-w-xl">
@@ -99,10 +99,10 @@ export default function AnalyzerPage() {
         {/* Demo Quick-Loader Section */}
         <div className="p-6 bg-white space-y-4">
           <div className="flex items-center justify-between border-b border-[#F4F4F0] pb-3">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-400 font-medium">
-              Load Demo Email Scenarios
+            <span className="text-[11px] font-sans uppercase tracking-[0.18em] text-neutral-400 font-semibold">
+              LOAD DEMO EMAIL SCENARIOS
             </span>
-            <span className="text-[10px] font-mono text-neutral-400">1-Click Demos</span>
+            <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-[0.15em]">1-Click Demos</span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -134,7 +134,7 @@ export default function AnalyzerPage() {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id)}
-                  className="text-xs uppercase tracking-wider font-mono py-1 transition-colors"
+                  className="text-xs uppercase tracking-[0.18em] font-sans py-1 transition-colors"
                   style={{
                     color: active ? '#111111' : '#737373',
                     fontWeight: active ? 600 : 400,
@@ -160,8 +160,8 @@ export default function AnalyzerPage() {
             <form onSubmit={handleAnalyzePaste} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
-                    From (Sender Email)
+                  <label className="block text-[10px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold mb-1">
+                    FROM (SENDER EMAIL)
                   </label>
                   <input
                     type="text"
@@ -173,8 +173,8 @@ export default function AnalyzerPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
-                    To (Recipient Email)
+                  <label className="block text-[10px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold mb-1">
+                    TO (RECIPIENT EMAIL)
                   </label>
                   <input
                     type="text"
@@ -187,8 +187,8 @@ export default function AnalyzerPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
-                  Subject
+                <label className="block text-[10px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold mb-1">
+                  SUBJECT
                 </label>
                 <input
                   type="text"
@@ -201,8 +201,8 @@ export default function AnalyzerPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
-                  Email Body Text
+                <label className="block text-[10px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold mb-1">
+                  EMAIL BODY TEXT
                 </label>
                 <textarea
                   rows="6"
@@ -215,7 +215,7 @@ export default function AnalyzerPage() {
                 />
               </div>
 
-              {/* Single Primary CTA */}
+              {/* Single Heavy Primary CTA */}
               <button
                 type="submit"
                 disabled={isAnalyzing}
@@ -230,28 +230,33 @@ export default function AnalyzerPage() {
           {/* Method 2: File Upload */}
           {activeTab === 'upload' && (
             <form onSubmit={handleAnalyzeFile} className="space-y-6">
-              <div
-                className="p-12 text-center bg-[#F4F4F0] transition-colors cursor-pointer"
-                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                onDragLeave={() => setDragOver(false)}
-                onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) setSelectedFile(e.dataTransfer.files[0]); }}
-              >
-                <input
-                  type="file"
-                  accept=".eml,.msg,.txt"
-                  onChange={(e) => setSelectedFile(e.target.files[0])}
-                  className="hidden"
-                  id="file-upload-input"
-                />
-                <label htmlFor="file-upload-input" className="cursor-pointer space-y-3 block">
-                  <Upload className="w-8 h-8 text-neutral-400 mx-auto" />
-                  <p className="text-sm font-medium text-neutral-900">
-                    {selectedFile ? selectedFile.name : 'Click to select or drag & drop email file'}
-                  </p>
-                  <p className="text-xs font-mono text-neutral-500">
-                    Supported formats: EML, MSG, TXT
-                  </p>
-                </label>
+              <div className="space-y-2">
+                <div
+                  className="p-12 text-center bg-[#F4F4F0] border border-[#E5E5E0] transition-colors cursor-pointer"
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) setSelectedFile(e.dataTransfer.files[0]); }}
+                >
+                  <input
+                    type="file"
+                    accept=".eml,.msg,.txt"
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                    className="hidden"
+                    id="file-upload-input"
+                  />
+                  <label htmlFor="file-upload-input" className="cursor-pointer space-y-3 block">
+                    <Upload className="w-8 h-8 text-neutral-400 mx-auto" />
+                    <p className="text-sm font-medium text-neutral-900">
+                      {selectedFile ? selectedFile.name : 'Click to select or drag & drop email file'}
+                    </p>
+                    <p className="text-xs font-mono text-neutral-500">
+                      Supported formats: EML, MSG, TXT
+                    </p>
+                  </label>
+                </div>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400 text-center">
+                  FIG 2.0 — DIRECT EML / MSG FILE STREAM INPUT
+                </p>
               </div>
 
               <button

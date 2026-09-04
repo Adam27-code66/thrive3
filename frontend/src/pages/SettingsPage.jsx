@@ -33,10 +33,10 @@ export default function SettingsPage() {
 
         {/* Page Header */}
         <div className="space-y-2 border-b border-[#E5E5E0] pb-6">
-          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-            System Configuration
+          <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+            SYSTEM CONFIGURATION
           </span>
-          <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+          <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
             Settings & Engine Weights
           </h1>
         </div>
@@ -44,8 +44,8 @@ export default function SettingsPage() {
         {/* 1. Risk Scoring Weights */}
         <div className="p-8 bg-white space-y-6">
           <div className="border-b border-[#F4F4F0] pb-3">
-            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-              Engine Matrix
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+              ENGINE MATRIX
             </span>
             <h3 className="text-2xl font-normal font-serif text-neutral-900">
               Explainable Risk Factor Weights
@@ -70,11 +70,14 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
+
         {/* 2. Protected Brands */}
         <div className="p-8 bg-white space-y-6">
           <div className="border-b border-[#F4F4F0] pb-3">
-            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-              Dictionary
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+              DICTIONARY
             </span>
             <h3 className="text-2xl font-normal font-serif text-neutral-900">
               Protected Brand Targets ({brandList.length})
@@ -85,7 +88,7 @@ export default function SettingsPage() {
             {brandList.map((brand, idx) => (
               <span
                 key={idx}
-                className="px-3 py-1.5 bg-[#F4F4F0] text-neutral-800 font-mono text-xs"
+                className="px-3 py-1.5 bg-[#F4F4F0] text-neutral-800 font-mono text-xs border border-[#E5E5E0]"
               >
                 {brand}
               </span>
@@ -93,11 +96,14 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
+
         {/* 3. Environment Specs */}
         <div className="p-8 bg-white space-y-6">
           <div className="border-b border-[#F4F4F0] pb-3">
-            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-              Specifications
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+              SPECIFICATIONS
             </span>
             <h3 className="text-2xl font-normal font-serif text-neutral-900">
               Environment & Runtime Architecture
@@ -106,8 +112,8 @@ export default function SettingsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-mono text-xs">
             {envItems.map(({ label, value }) => (
-              <div key={label} className="p-4 bg-[#F4F4F0] space-y-1">
-                <span className="text-[10px] text-neutral-400 block uppercase tracking-widest">{label}</span>
+              <div key={label} className="p-4 bg-[#F4F4F0] space-y-1 border border-[#E5E5E0]">
+                <span className="text-[10px] text-neutral-400 block uppercase tracking-[0.18em] font-sans font-semibold">{label}</span>
                 <span className="font-semibold text-neutral-900 block">{value}</span>
               </div>
             ))}

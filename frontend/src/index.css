@@ -17,13 +17,12 @@
   }
 
   .font-serif {
-    font-family: 'Playfair Display', 'Fraunces', Georgia, serif;
+    font-family: 'Fraunces', 'Canela', 'Playfair Display', Georgia, serif;
   }
 
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', 'Courier Prime', monospace;
   }
-
 
   * {
     box-sizing: border-box;
@@ -88,6 +87,18 @@
 .delay-300 { animation-delay: 300ms; }
 
 /* ============================================================
+   EDITORIAL TYPOGRAPHY UTILITIES
+   ============================================================ */
+.eyebrow-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #737373;
+}
+
+/* ============================================================
    EDITORIAL FORM INPUTS (Flat, Borderless with Bottom-Line)
    ============================================================ */
 .editorial-input {
@@ -115,23 +126,24 @@
    ============================================================ */
 .btn-editorial-primary {
   display: inline-flex;
-  items-center: center;
+  align-items: center;
   justify-content: center;
   gap: 8px;
   background-color: #18181B;
   color: #FBFBF9;
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  padding: 12px 24px;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
   border-radius: 2px;
   border: none;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: background-color 180ms ease, transform 150ms ease, opacity 150ms ease;
 }
 
 .btn-editorial-primary:hover {
-  background-color: #27272A;
+  background-color: #000000;
   opacity: 0.95;
 }
 
@@ -141,23 +153,28 @@
 
 .btn-editorial-secondary {
   display: inline-flex;
-  items-center: center;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   background-color: transparent;
-  color: #111111;
-  font-size: 13px;
+  color: #525252;
+  font-size: 12px;
   font-weight: 500;
-  padding: 12px 24px;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
   border: none;
-  border-bottom: 1px solid #111111;
+  border-bottom: 1px solid #D4D4D0;
   cursor: pointer;
   transition: color 180ms ease, border-color 180ms ease, transform 150ms ease;
 }
 
 .btn-editorial-secondary:hover {
-  color: #737373;
-  border-bottom-color: #737373;
+  color: #111111;
+  border-bottom-color: #111111;
+}
+
+.btn-editorial-secondary:active {
+  transform: scale(0.98);
 }
 
 .btn-editorial-secondary:active {

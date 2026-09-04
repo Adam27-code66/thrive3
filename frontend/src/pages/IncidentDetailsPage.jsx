@@ -60,18 +60,18 @@ export default function IncidentDetailsPage() {
           <div className="space-y-2">
             <Link
               to="/incidents"
-              className="inline-flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-neutral-900 transition-colors uppercase tracking-widest"
+              className="inline-flex items-center gap-2 text-xs font-sans text-neutral-400 hover:text-neutral-900 transition-colors uppercase tracking-[0.18em] font-semibold"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to Directory
+              <ArrowLeft className="w-3.5 h-3.5" /> BACK TO DIRECTORY
             </Link>
-            <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
               Incident Dossier #{incident.incident_id}
             </h1>
           </div>
 
           {/* Status Toggle Links */}
           <div className="flex items-center gap-4 text-xs font-mono">
-            <span className="text-neutral-400 uppercase tracking-widest text-[10px]">Status:</span>
+            <span className="text-neutral-400 uppercase tracking-[0.18em] text-[10px] font-sans font-semibold">STATUS:</span>
             {['OPEN', 'INVESTIGATING', 'RESOLVED'].map((st) => {
               const isActive = incident.status === st;
               return (
@@ -79,7 +79,7 @@ export default function IncidentDetailsPage() {
                   key={st}
                   onClick={() => handleStatusToggle(st)}
                   disabled={updating}
-                  className="py-1 transition-colors uppercase tracking-wider"
+                  className="py-1 transition-colors uppercase tracking-[0.15em]"
                   style={{
                     color: isActive ? '#111111' : '#A3A3A3',
                     fontWeight: isActive ? 600 : 400,

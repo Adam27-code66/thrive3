@@ -26,12 +26,12 @@ export default function IncidentsPage() {
       <div className="max-w-7xl mx-auto space-y-12">
 
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E5E5E0] pb-6">
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-              Incident Directory · {incidents.length} Logged
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+              INCIDENT DIRECTORY · {incidents.length} LOGGED
             </span>
-            <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
               Investigated Threat Ledger
             </h1>
           </div>
@@ -46,7 +46,7 @@ export default function IncidentsPage() {
           </button>
         </div>
 
-        {/* Incident Table */}
+        {/* Incident Table Container */}
         <div className="p-8 bg-white space-y-6">
           {loading ? (
             <div className="flex items-center justify-center py-20 gap-3 text-xs font-mono text-neutral-400">

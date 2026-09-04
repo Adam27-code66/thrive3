@@ -47,10 +47,10 @@ export default function ResultsPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E5E5E0] pb-6">
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-              SOC Incident Investigation · {incident_id}
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+              SOC INCIDENT INVESTIGATION · {incident_id}
             </span>
-            <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
               Threat Analysis & Forensics
             </h1>
           </div>
@@ -70,11 +70,14 @@ export default function ResultsPage() {
           scoreBreakdown={score_breakdown}
         />
 
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
+
         {/* 2. Indicator Grid */}
         <div className="space-y-4">
           <div className="border-b border-[#E5E5E0] pb-3">
-            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-              Vectors
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+              VECTORS
             </span>
             <h3 className="text-2xl font-normal font-serif text-neutral-900">
               Forensic Vector Breakdown
@@ -124,6 +127,9 @@ export default function ResultsPage() {
             />
           </div>
         </div>
+
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
 
         {/* 3. Detailed Evidence */}
         <EvidenceCard

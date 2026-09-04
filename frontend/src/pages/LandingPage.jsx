@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search, ShieldCheck, Activity, Zap, Lock } from 'lucide-react';
 
 export default function LandingPage() {
   const capabilities = [
@@ -42,7 +42,7 @@ export default function LandingPage() {
       {/* ================================================================
           HERO SECTION (Airy Split-Grid with Right-Half Editorial Visual)
       ================================================================ */}
-      <section className="px-6 lg:px-12 pt-16 pb-24 max-w-7xl mx-auto min-h-[85vh] flex items-center">
+      <section className="px-6 lg:px-12 pt-16 pb-20 max-w-7xl mx-auto min-h-[85vh] flex flex-col justify-center space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
 
           {/* Left Hero Content (7 Cols) */}
@@ -50,12 +50,12 @@ export default function LandingPage() {
             {/* Micro Category Label */}
             <div className="inline-flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-neutral-900" />
-              <span className="text-xs uppercase tracking-widest font-mono text-neutral-500 font-medium">
-                Security Operations & Telemetry
+              <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-500 font-medium">
+                SECURITY OPERATIONS & TELEMETRY
               </span>
             </div>
 
-            {/* Large Thin Headline in Playfair Display / Fraunces */}
+            {/* Large Thin Headline in Fraunces / Serif */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal font-serif text-neutral-900 tracking-tight leading-[1.08]">
               Explainable Phishing Investigation & Incident Response
             </h1>
@@ -65,7 +65,7 @@ export default function LandingPage() {
               A minimalist, deterministic security platform engineered to evaluate email payloads, expose deceptive brand homoglyphs, and deliver transparent forensic verdicts.
             </p>
 
-            {/* CTAs: Single Solid Dark Button */}
+            {/* CTAs: Single Solid Dark Button & Subtle Secondary Link */}
             <div className="flex flex-wrap items-center gap-6 pt-4">
               <Link
                 to="/analyzer"
@@ -77,36 +77,61 @@ export default function LandingPage() {
 
               <Link
                 to="/dashboard"
-                className="btn-editorial-secondary text-sm flex items-center gap-2 py-4"
+                className="btn-editorial-secondary text-xs flex items-center gap-2"
               >
                 Explore SOC Dashboard
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
 
-          {/* Right Hero Image (5 Cols - Editorial Abstract Network Image) */}
-          <div className="lg:col-span-5 animate-fade-in delay-200">
-            <div className="relative overflow-hidden bg-[#F4F4F0] p-2 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] flex items-center justify-center">
+          {/* Right Hero Image with Muted Caption (5 Cols) */}
+          <div className="lg:col-span-5 animate-fade-in delay-200 space-y-2">
+            <div className="relative overflow-hidden bg-[#F4F4F0] p-2 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] flex items-center justify-center border border-[#E5E5E0]">
               <img
                 src="/landing_hero.png"
                 alt="Editorial Abstract Network Data Visualization"
                 className="w-full h-full object-cover grayscale contrast-[1.05] opacity-90 transition-transform duration-700 hover:scale-105"
               />
             </div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400 text-center">
+              FIG 1.0 — REAL-TIME PAYLOAD PARSER & TELEMETRY GRAPHIC
+            </p>
           </div>
 
+        </div>
+
+        {/* Stat Strip Data Layer with Thin Dividers */}
+        <div className="pt-8 border-t border-[#E5E5E0] grid grid-cols-2 md:grid-cols-4 gap-6 font-mono text-xs text-neutral-700">
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">ANALYZED PAYLOADS</span>
+            <span className="text-xl font-light text-neutral-900">2,840+</span>
+          </div>
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">DETECTION ACCURACY</span>
+            <span className="text-xl font-light text-neutral-900">99.4%</span>
+          </div>
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">PARSER LATENCY</span>
+            <span className="text-xl font-light text-neutral-900">&lt; 120ms</span>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">TELEMETRY STATUS</span>
+            <span className="text-xl font-light text-neutral-900 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" /> 24/7 Active
+            </span>
+          </div>
         </div>
       </section>
 
       {/* ================================================================
           EDITORIAL NARRATIVE SECTION
       ================================================================ */}
-      <section className="bg-[#F4F4F0] py-28 px-6 lg:px-12 border-y border-[#E5E5E0]">
+      <section className="bg-[#F4F4F0] py-24 px-6 lg:px-12 border-y border-[#E5E5E0]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 space-y-3">
-            <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-              The Philosophy
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+              THE PHILOSOPHY
             </span>
             <h2 className="text-3xl font-serif font-normal text-neutral-900">
               The Art of Explainable Response
@@ -127,10 +152,10 @@ export default function LandingPage() {
       {/* ================================================================
           CAPABILITIES GRID (Clean Borderless Editorial Blocks)
       ================================================================ */}
-      <section className="py-32 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="mb-16 space-y-3">
-          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-            Capabilities
+      <section className="py-28 px-6 lg:px-12 max-w-7xl mx-auto">
+        <div className="mb-16 space-y-3 border-b border-[#E5E5E0] pb-6">
+          <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+            CAPABILITIES
           </span>
           <h2 className="text-3xl lg:text-4xl font-serif font-normal text-neutral-900">
             Engineered Forensic Matrix
@@ -140,7 +165,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {capabilities.map((item, idx) => (
             <div key={idx} className="space-y-3 p-8 bg-white transition-all duration-200 hover:bg-[#F4F4F0]">
-              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 block">
+              <span className="text-[11px] uppercase tracking-[0.18em] font-mono text-neutral-400 block">
                 0{idx + 1} · {item.label}
               </span>
               <h3 className="text-xl font-normal font-serif text-neutral-900">
@@ -159,8 +184,8 @@ export default function LandingPage() {
       ================================================================ */}
       <section className="bg-white py-24 px-6 lg:px-12 border-t border-[#E5E5E0] text-center">
         <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-            Ready to Begin
+          <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+            READY TO BEGIN
           </span>
           <h2 className="text-3xl lg:text-4xl font-serif font-normal text-neutral-900">
             Analyze any email payload in seconds
@@ -179,3 +204,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

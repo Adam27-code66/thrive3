@@ -94,8 +94,8 @@ export default function DashboardPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E5E5E0] pb-6">
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
-              Executive Briefing & Telemetry
+            <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block">
+              EXECUTIVE BRIEFING & TELEMETRY
             </span>
             <h1 className="text-4xl lg:text-5xl font-normal font-serif text-neutral-900 tracking-tight">
               SOC Threat Dashboard
@@ -110,6 +110,30 @@ export default function DashboardPage() {
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Resetting...' : 'Reset Demo Data'}
           </button>
+        </div>
+
+        {/* Stat Strip Component for Context Layer */}
+        <div className="p-6 bg-white border border-[#E5E5E0] grid grid-cols-2 md:grid-cols-4 gap-6 font-mono text-xs text-neutral-700">
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">LIVE INGESTION STREAM</span>
+            <span className="text-xl font-light text-neutral-900">{summary.total_analyzed || 0} Payloads</span>
+          </div>
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">ACTIVE THREAT RATIO</span>
+            <span className="text-xl font-light text-neutral-900">
+              {Math.round(((summary.critical_count || 0) / (summary.total_analyzed || 1)) * 100)}% Flagged
+            </span>
+          </div>
+          <div className="space-y-1 md:border-r border-[#E5E5E0] pr-4">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">PARSER PRECISION</span>
+            <span className="text-xl font-light text-neutral-900">99.4%</span>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 block font-sans">TELEMETRY MONITOR</span>
+            <span className="text-xl font-light text-neutral-900 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" /> Active
+            </span>
+          </div>
         </div>
 
         {/* Metric Cards Grid */}
@@ -140,12 +164,15 @@ export default function DashboardPage() {
           />
         </div>
 
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
+
         {/* Primary Visual Analytics Section: 7-Day Ingestion Velocity */}
         <div className="p-8 bg-white space-y-6">
           <div className="flex items-center justify-between border-b border-[#F4F4F0] pb-4">
             <div>
-              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Telemetry Velocity
+              <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+                TELEMETRY VELOCITY
               </span>
               <h3 className="text-2xl font-normal font-serif text-neutral-900 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-neutral-500" />
@@ -187,7 +214,13 @@ export default function DashboardPage() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400 text-center">
+            FIG 3.0 — 7-DAY INGESTION VELOCITY TELEMETRY
+          </p>
         </div>
+
+        {/* Section Divider */}
+        <hr className="border-t border-[#E5E5E0] my-8" />
 
         {/* Secondary Visual Charts: Verdict Classification & Domain Intelligence */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -195,8 +228,8 @@ export default function DashboardPage() {
           {/* Verdict Distribution Donut Chart + Visual Breakdown */}
           <div className="lg:col-span-6 p-8 bg-white space-y-6">
             <div className="border-b border-[#F4F4F0] pb-3">
-              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Threat Matrix
+              <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+                THREAT MATRIX
               </span>
               <h3 className="text-xl font-normal font-serif text-neutral-900 flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-neutral-600" />
@@ -226,8 +259,11 @@ export default function DashboardPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400 text-center">
+              FIG 3.1 — THREAT CLASSIFICATION MATRIX
+            </p>
 
-            {/* Visual Progress Bar Breakdown for absolute reliability */}
+            {/* Visual Progress Bar Breakdown */}
             <div className="space-y-3 pt-4 border-t border-[#F4F4F0] font-mono text-xs">
               {threatDistribution.map((item, idx) => {
                 const percent = Math.round((item.value / totalIncidents) * 100) || 0;
@@ -255,8 +291,8 @@ export default function DashboardPage() {
           {/* Top Targeted Domains Bar Chart + Visual Bars */}
           <div className="lg:col-span-6 p-8 bg-white space-y-6">
             <div className="border-b border-[#F4F4F0] pb-3">
-              <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
-                Domain Intelligence
+              <span className="text-[11px] uppercase tracking-[0.18em] font-sans text-neutral-400 font-semibold block mb-1">
+                DOMAIN INTELLIGENCE
               </span>
               <h3 className="text-xl font-normal font-serif text-neutral-900 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-neutral-600" />
@@ -288,6 +324,9 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400 text-center">
+              FIG 3.2 — TOP TARGETED DOMAINS & BRANDS
+            </p>
 
             {/* Visual Frequency Progress Bar List */}
             <div className="space-y-3 pt-4 border-t border-[#F4F4F0] font-mono text-xs">

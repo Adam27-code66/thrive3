@@ -26,15 +26,15 @@ export default function Footer() {
               Explainable Phishing Investigation & Incident Response Platform. Built on deterministic forensic rule engines, brand homoglyph scoring, and automated telemetry extraction.
             </p>
 
-            <div className="text-xs uppercase tracking-widest text-neutral-400 font-mono pt-2">
-              Don't Trust. Verify. Explain Why.
+            <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 font-sans font-semibold pt-2">
+              DON'T TRUST. VERIFY. EXPLAIN WHY.
             </div>
           </div>
 
           {/* Navigation */}
           <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-widest text-neutral-900 font-mono font-semibold">
-              Platform
+            <h4 className="text-[11px] uppercase tracking-[0.18em] text-neutral-900 font-sans font-semibold">
+              PLATFORM
             </h4>
             <ul className="space-y-2.5">
               {[
@@ -59,8 +59,8 @@ export default function Footer() {
 
           {/* Architecture Details */}
           <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-widest text-neutral-900 font-mono font-semibold">
-              Architecture
+            <h4 className="text-[11px] uppercase tracking-[0.18em] text-neutral-900 font-sans font-semibold">
+              ARCHITECTURE
             </h4>
             <ul className="space-y-2 text-xs text-neutral-500 font-mono">
               <li>Python FastAPI Engine</li>
