@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnalysis } from '../context/AnalysisContext';
 import AnalysisProgress from '../components/AnalysisProgress';
-import { Search, Upload, Mail, Sparkles, AlertCircle } from 'lucide-react';
+import { Search, Upload, Mail, AlertCircle } from 'lucide-react';
 
 export default function AnalyzerPage() {
   const navigate = useNavigate();
@@ -69,232 +69,169 @@ export default function AnalyzerPage() {
   };
 
   const demoButtons = [
-    { type: 'paypal', label: 'PayPal Impersonation', bg: 'rgba(239,68,68,0.08)', color: '#f87171', border: 'rgba(239,68,68,0.25)', dot: '#ef4444' },
-    { type: 'amazon', label: 'Amazon Account Lock', bg: 'rgba(249,115,22,0.08)', color: '#fb923c', border: 'rgba(249,115,22,0.25)', dot: '#f97316' },
-    { type: 'microsoft', label: 'Microsoft Reset', bg: 'rgba(234,179,8,0.08)', color: '#fbbf24', border: 'rgba(234,179,8,0.25)', dot: '#eab308' },
-    { type: 'safe', label: 'Safe Company Email', bg: 'rgba(34,197,94,0.08)', color: '#4ade80', border: 'rgba(34,197,94,0.25)', dot: '#22c55e' },
+    { type: 'paypal', label: 'PayPal Impersonation', dot: '#DC2626' },
+    { type: 'amazon', label: 'Amazon Account Lock', dot: '#EA580C' },
+    { type: 'microsoft', label: 'Microsoft Reset', dot: '#D97706' },
+    { type: 'safe', label: 'Safe Company Email', dot: '#16A34A' },
   ];
 
-  const inputStyle = {
-    width: '100%',
-    background: 'rgba(0,0,0,0.3)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '10px',
-    padding: '10px 14px',
-    color: '#e2e8f0',
-    fontSize: '13px',
-    fontFamily: 'JetBrains Mono, monospace',
-    outline: 'none',
-    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontSize: '10px',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    color: '#475569',
-    fontFamily: 'JetBrains Mono, monospace',
-    marginBottom: '6px',
-  };
-
-  const handleInputFocus = (e) => {
-    e.target.style.borderColor = '#10b981';
-    e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.12)';
-  };
-  const handleInputBlur = (e) => {
-    e.target.style.borderColor = 'rgba(255,255,255,0.1)';
-    e.target.style.boxShadow = 'none';
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-10 space-y-6">
+    <div className="bg-[#FBFBF9] min-h-screen py-16 px-6 lg:px-12 animate-fade-in">
 
       {/* Analysis Overlay */}
       <AnalysisProgress isAnalyzing={isAnalyzing} currentStep={analysisStep} steps={steps} />
 
-      {/* Page Header */}
-      <div className="text-center space-y-3 pb-2">
-        <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-mono font-bold"
-          style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: '#34d399' }}
-        >
-          <Search className="w-3.5 h-3.5" />
-          SOC EMAIL INVESTIGATION WORKSPACE
-        </div>
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">Analyze Suspicious Email</h1>
-        <p className="text-sm font-mono" style={{ color: '#475569' }}>
-          Provide raw email headers/text or upload an EML/MSG file for instant forensic breakdown
-        </p>
-      </div>
+      <div className="max-w-4xl mx-auto space-y-12">
 
-      {/* Demo Email Quick Selector */}
-      <div
-        className="rounded-2xl p-5 space-y-4"
-        style={{ background: '#0d1424', border: '1px solid rgba(255,255,255,0.07)' }}
-      >
-        <div className="flex items-center justify-between">
-          <span
-            className="text-xs font-mono uppercase font-bold flex items-center gap-1.5"
-            style={{ color: '#94a3b8' }}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            Load Demo Email Scenarios
+        {/* Page Header */}
+        <div className="space-y-3">
+          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
+            SOC Investigation Workspace
           </span>
-          <span className="text-[10px] font-mono" style={{ color: '#334155' }}>1-Click Demos</span>
+          <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+            Analyze Suspicious Email
+          </h1>
+          <p className="text-sm text-neutral-600 font-sans max-w-xl">
+            Provide raw email headers/text or upload an EML/MSG file for instant forensic breakdown.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {demoButtons.map(({ type, label, bg, color, border, dot }) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => loadDemoEmail(type)}
-              className="px-3 py-2.5 rounded-xl text-left text-xs font-mono font-bold transition-all"
-              style={{ background: bg, color, border: `1px solid ${border}` }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
-            >
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: dot }} />
-                {label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Demo Quick-Loader Section */}
+        <div className="p-6 bg-white space-y-4">
+          <div className="flex items-center justify-between border-b border-[#F4F4F0] pb-3">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-400 font-medium">
+              Load Demo Email Scenarios
+            </span>
+            <span className="text-[10px] font-mono text-neutral-400">1-Click Demos</span>
+          </div>
 
-      {/* Main Form Card */}
-      <div
-        className="rounded-2xl overflow-hidden"
-        style={{ border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
-      >
-        {/* Tabs */}
-        <div
-          className="flex items-center gap-1 px-5 py-4"
-          style={{ background: '#0d1424', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
-        >
-          {[
-            { id: 'paste', icon: Mail, label: 'Method 1 — Paste Email' },
-            { id: 'upload', icon: Upload, label: 'Method 2 — Upload File' },
-          ].map(({ id, icon: Icon, label }) => {
-            const active = activeTab === id;
-            return (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {demoButtons.map(({ type, label, dot }) => (
               <button
-                key={id}
-                onClick={() => setActiveTab(id)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all"
-                style={{
-                  background: active ? 'rgba(16,185,129,0.1)' : 'transparent',
-                  color: active ? '#34d399' : '#64748b',
-                  border: active ? '1px solid rgba(16,185,129,0.25)' : '1px solid transparent',
-                }}
+                key={type}
+                type="button"
+                onClick={() => loadDemoEmail(type)}
+                className="py-2.5 px-3 bg-[#F4F4F0] text-left text-xs font-mono text-neutral-800 transition-colors hover:bg-neutral-200 flex items-center gap-2"
               >
-                <Icon className="w-4 h-4" />
-                {label}
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+                <span className="truncate">{label}</span>
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        <div className="p-6 space-y-4" style={{ background: '#090d18' }}>
-          {/* Error */}
+        {/* Main Form Card */}
+        <div className="bg-white p-8 space-y-8">
+
+          {/* Tab Selector */}
+          <div className="flex items-center gap-8 border-b border-[#E5E5E0] pb-4">
+            {[
+              { id: 'paste', label: 'Method 1 — Paste Email' },
+              { id: 'upload', label: 'Method 2 — Upload File' },
+            ].map(({ id, label }) => {
+              const active = activeTab === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className="text-xs uppercase tracking-wider font-mono py-1 transition-colors"
+                  style={{
+                    color: active ? '#111111' : '#737373',
+                    fontWeight: active ? 600 : 400,
+                    borderBottom: active ? '1px solid #111111' : '1px solid transparent',
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Error Banner */}
           {error && (
-            <div
-              className="flex items-center gap-3 p-3 rounded-xl text-sm"
-              style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171' }}
-            >
+            <div className="p-4 bg-red-50 text-red-800 text-xs font-mono flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              {error}
+              <span>{error}</span>
             </div>
           )}
 
-          {/* METHOD 1: PASTE FORM */}
+          {/* Method 1: Paste Form */}
           {activeTab === 'paste' && (
-            <form onSubmit={handleAnalyzePaste} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleAnalyzePaste} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label style={labelStyle}>From (Sender Email)</label>
+                  <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
+                    From (Sender Email)
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="security@paypa1-login.com"
                     value={sender}
                     onChange={(e) => setSender(e.target.value)}
-                    style={inputStyle}
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
+                    className="editorial-input font-mono"
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>To (Recipient Email)</label>
+                  <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
+                    To (Recipient Email)
+                  </label>
                   <input
                     type="text"
                     placeholder="employee@company.com"
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
-                    style={inputStyle}
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
+                    className="editorial-input font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label style={labelStyle}>Subject</label>
+                <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
+                  Subject
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="Your account will be suspended!"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  style={inputStyle}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
+                  className="editorial-input font-mono"
                 />
               </div>
 
               <div>
-                <label style={labelStyle}>Email Body Text</label>
+                <label className="block text-[10px] uppercase tracking-widest font-mono text-neutral-400 mb-1">
+                  Email Body Text
+                </label>
                 <textarea
-                  rows="7"
+                  rows="6"
                   required
                   placeholder="Paste full raw email body text or message contents here..."
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  style={{ ...inputStyle, resize: 'vertical', lineHeight: '1.6' }}
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
+                  className="editorial-input font-mono leading-relaxed"
+                  style={{ resize: 'vertical' }}
                 />
               </div>
 
+              {/* Single Primary CTA */}
               <button
                 type="submit"
                 disabled={isAnalyzing}
-                className="btn-primary w-full justify-center"
-                style={{ padding: '14px', fontSize: '14px' }}
+                className="btn-editorial-primary w-full py-4 text-sm font-medium"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4" />
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Email'}
               </button>
             </form>
           )}
 
-          {/* METHOD 2: FILE UPLOAD */}
+          {/* Method 2: File Upload */}
           {activeTab === 'upload' && (
-            <form onSubmit={handleAnalyzeFile} className="space-y-5">
+            <form onSubmit={handleAnalyzeFile} className="space-y-6">
               <div
-                className="relative rounded-2xl p-10 text-center space-y-3 transition-all cursor-pointer"
-                style={{
-                  background: dragOver ? 'rgba(16,185,129,0.06)' : 'rgba(0,0,0,0.2)',
-                  border: dragOver
-                    ? '2px dashed rgba(16,185,129,0.5)'
-                    : selectedFile
-                    ? '2px dashed rgba(16,185,129,0.35)'
-                    : '2px dashed rgba(255,255,255,0.1)',
-                  transition: 'all 0.2s ease',
-                }}
+                className="p-12 text-center bg-[#F4F4F0] transition-colors cursor-pointer"
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
                 onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) setSelectedFile(e.dataTransfer.files[0]); }}
@@ -303,37 +240,32 @@ export default function AnalyzerPage() {
                   type="file"
                   accept=".eml,.msg,.txt"
                   onChange={(e) => setSelectedFile(e.target.files[0])}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="hidden"
+                  id="file-upload-input"
                 />
-                <Upload
-                  className="w-10 h-10 mx-auto"
-                  style={{ color: selectedFile ? '#10b981' : '#334155' }}
-                />
-                <div>
-                  <p className="text-sm font-bold text-white">
-                    {selectedFile ? selectedFile.name : 'Drag & drop email file here or click to browse'}
+                <label htmlFor="file-upload-input" className="cursor-pointer space-y-3 block">
+                  <Upload className="w-8 h-8 text-neutral-400 mx-auto" />
+                  <p className="text-sm font-medium text-neutral-900">
+                    {selectedFile ? selectedFile.name : 'Click to select or drag & drop email file'}
                   </p>
-                  <p className="text-xs font-mono mt-1" style={{ color: '#475569' }}>
-                    Supported formats: <strong>EML, MSG, TXT</strong>
+                  <p className="text-xs font-mono text-neutral-500">
+                    Supported formats: EML, MSG, TXT
                   </p>
-                </div>
+                </label>
               </div>
 
               <button
                 type="submit"
                 disabled={!selectedFile || isAnalyzing}
-                className="btn-primary w-full justify-center"
-                style={{
-                  padding: '14px',
-                  fontSize: '14px',
-                  opacity: !selectedFile || isAnalyzing ? 0.5 : 1,
-                }}
+                className="btn-editorial-primary w-full py-4 text-sm font-medium"
+                style={{ opacity: !selectedFile || isAnalyzing ? 0.5 : 1 }}
               >
-                <Search className="w-5 h-5" />
-                {isAnalyzing ? 'Analyzing...' : 'Analyze Uploaded File'}
+                <Search className="w-4 h-4" />
+                {isAnalyzing ? 'Analyzing File...' : 'Analyze Uploaded File'}
               </button>
             </form>
           )}
+
         </div>
       </div>
     </div>

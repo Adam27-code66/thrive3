@@ -1,28 +1,4 @@
 import React from 'react';
-import { Settings as SettingsIcon, Shield, Terminal, Cpu, CheckCircle2, AlertTriangle } from 'lucide-react';
-
-function SectionCard({ title, icon: Icon, iconColor, children }) {
-  return (
-    <div
-      className="rounded-2xl overflow-hidden"
-      style={{ background: '#0d1424', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}
-    >
-      <div
-        className="flex items-center gap-3 px-6 py-4"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-      >
-        <div
-          className="p-2 rounded-xl"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-        >
-          <Icon className="w-4 h-4" style={{ color: iconColor }} />
-        </div>
-        <h2 className="text-sm font-bold text-white">{title}</h2>
-      </div>
-      <div className="p-6">{children}</div>
-    </div>
-  );
-}
 
 export default function SettingsPage() {
   const brandList = [
@@ -43,109 +19,109 @@ export default function SettingsPage() {
   ];
 
   const envItems = [
-    { label: 'Backend Engine', value: 'Python 3.14 + FastAPI', color: '#22d3ee' },
-    { label: 'Database Driver', value: 'SQLAlchemy + MySQL/SQLite', color: '#34d399' },
-    { label: 'Frontend Framework', value: 'React 19 + Vite + Tailwind', color: '#818cf8' },
-    { label: 'Analysis Method', value: 'Deterministic Rule Engine', color: '#fbbf24' },
-    { label: 'Scoring Method', value: 'Weighted Factor Matrix', color: '#fb923c' },
-    { label: 'IOC Format', value: 'STIX-compatible JSON', color: '#c4b5fd' },
+    { label: 'Backend Engine', value: 'Python 3.14 + FastAPI' },
+    { label: 'Database Driver', value: 'SQLAlchemy + MySQL/SQLite' },
+    { label: 'Frontend Framework', value: 'React 19 + Vite + Tailwind' },
+    { label: 'Analysis Method', value: 'Deterministic Rule Engine' },
+    { label: 'Scoring Method', value: 'Weighted Factor Matrix' },
+    { label: 'IOC Format', value: 'STIX-compatible JSON' },
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 lg:px-8 py-10 space-y-8">
+    <div className="bg-[#FBFBF9] min-h-screen py-16 px-6 lg:px-12 space-y-12 animate-fade-in">
+      <div className="max-w-4xl mx-auto space-y-12">
 
-      {/* Page Header */}
-      <div>
-        <span className="text-[11px] font-mono font-bold uppercase" style={{ color: '#10b981' }}>
-          System Configuration
-        </span>
-        <h1 className="text-3xl font-black text-white tracking-tight mt-1">Settings & Engine Rules</h1>
-      </div>
-
-      {/* 1. Risk Scoring Weights */}
-      <SectionCard title="Explainable Risk Scoring Weights Matrix" icon={Cpu} iconColor="#22d3ee">
-        <div className="space-y-3">
-          {rules.map((r, idx) => (
-            <div
-              key={idx}
-              className="flex items-start sm:items-center justify-between gap-4 rounded-xl p-4 transition-all"
-              style={{
-                background: 'rgba(0,0,0,0.25)',
-                border: '1px solid rgba(255,255,255,0.05)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(16,185,129,0.15)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; }}
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-white font-mono">{r.factor}</p>
-                <p className="text-xs mt-0.5 leading-relaxed" style={{ color: '#64748b' }}>{r.desc}</p>
-              </div>
-              <span
-                className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold font-mono"
-                style={{
-                  background: 'rgba(239,68,68,0.1)',
-                  color: '#f87171',
-                  border: '1px solid rgba(239,68,68,0.25)',
-                }}
-              >
-                {r.weight}
-              </span>
-            </div>
-          ))}
+        {/* Page Header */}
+        <div className="space-y-2 border-b border-[#E5E5E0] pb-6">
+          <span className="text-xs uppercase tracking-widest font-mono text-neutral-400 font-medium block">
+            System Configuration
+          </span>
+          <h1 className="text-4xl lg:text-5xl font-light font-serif text-neutral-900 tracking-tight">
+            Settings & Engine Weights
+          </h1>
         </div>
-      </SectionCard>
 
-      {/* 2. Protected Brand List */}
-      <SectionCard title="Protected Target Brand Dictionary" icon={Shield} iconColor="#34d399">
-        <div className="flex flex-wrap gap-2">
-          {brandList.map((brand, idx) => (
-            <span
-              key={idx}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                color: '#94a3b8',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(16,185,129,0.08)';
-                e.currentTarget.style.color = '#34d399';
-                e.currentTarget.style.borderColor = 'rgba(16,185,129,0.2)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                e.currentTarget.style.color = '#94a3b8';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
-              }}
-            >
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-              {brand}
+        {/* 1. Risk Scoring Weights */}
+        <div className="p-8 bg-white space-y-6">
+          <div className="border-b border-[#F4F4F0] pb-3">
+            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
+              Engine Matrix
             </span>
-          ))}
-        </div>
-      </SectionCard>
+            <h3 className="text-2xl font-normal font-serif text-neutral-900">
+              Explainable Risk Factor Weights
+            </h3>
+          </div>
 
-      {/* 3. Environment & Stack */}
-      <SectionCard title="Environment & Stack Specifications" icon={Terminal} iconColor="#c4b5fd">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {envItems.map(({ label, value, color }) => (
-            <div
-              key={label}
-              className="rounded-xl p-4"
-              style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <span
-                className="block text-[9px] font-bold uppercase tracking-widest mb-1.5 font-mono"
-                style={{ color: '#334155' }}
+          <div className="space-y-4">
+            {rules.map((r, idx) => (
+              <div
+                key={idx}
+                className="flex items-start sm:items-center justify-between gap-4 p-4 bg-[#F4F4F0] font-sans"
               >
-                {label}
-              </span>
-              <span className="text-sm font-bold font-mono" style={{ color }}>{value}</span>
-            </div>
-          ))}
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-neutral-900 font-mono">{r.factor}</p>
+                  <p className="text-xs text-neutral-500 mt-1 leading-relaxed">{r.desc}</p>
+                </div>
+                <span className="font-mono text-xs font-semibold text-neutral-900 flex-shrink-0">
+                  {r.weight}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </SectionCard>
 
+        {/* 2. Protected Brands */}
+        <div className="p-8 bg-white space-y-6">
+          <div className="border-b border-[#F4F4F0] pb-3">
+            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
+              Dictionary
+            </span>
+            <h3 className="text-2xl font-normal font-serif text-neutral-900">
+              Protected Brand Targets ({brandList.length})
+            </h3>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            {brandList.map((brand, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1.5 bg-[#F4F4F0] text-neutral-800 font-mono text-xs"
+              >
+                {brand}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Environment Specs */}
+        <div className="p-8 bg-white space-y-6">
+          <div className="border-b border-[#F4F4F0] pb-3">
+            <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium block mb-1">
+              Specifications
+            </span>
+            <h3 className="text-2xl font-normal font-serif text-neutral-900">
+              Environment & Runtime Architecture
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-mono text-xs">
+            {envItems.map(({ label, value }) => (
+              <div key={label} className="p-4 bg-[#F4F4F0] space-y-1">
+                <span className="text-[10px] text-neutral-400 block uppercase tracking-widest">{label}</span>
+                <span className="font-semibold text-neutral-900 block">{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Single Primary Button */}
+        <div className="pt-4 flex justify-end">
+          <button className="btn-editorial-primary text-sm px-8 py-4">
+            Save System Configuration
+          </button>
+        </div>
+
+      </div>
     </div>
   );
 }

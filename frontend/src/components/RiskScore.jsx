@@ -1,184 +1,101 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ThreatBadge from './ThreatBadge';
-import { ShieldAlert, CheckCircle2, ShieldX, HelpCircle } from 'lucide-react';
 
 export default function RiskScore({ score = 0, severity = 'SAFE', verdict = 'SAFE', confidence = 85, scoreBreakdown = [] }) {
-  const radius = 72;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+  const [displayScore, setDisplayScore] = useState(0);
 
-  const getScoreColor = () => {
-    if (score >= 81) return '#ef4444';
-    if (score >= 61) return '#f97316';
-    if (score >= 41) return '#eab308';
-    if (score >= 21) return '#3b82f6';
-    return '#22c55e';
-  };
+  // Smooth Count-Up Animation from 0 to target score on mount/change
+  useEffect(() => {
+    let startTimestamp = null;
+    const duration = 900; // ms
 
-  const scoreColor = getScoreColor();
-  const scoreLabel = score >= 81 ? 'CRITICAL RISK' : score >= 61 ? 'HIGH RISK' : score >= 41 ? 'MEDIUM RISK' : score >= 21 ? 'LOW RISK' : 'SAFE';
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Ease out quad formula
+      const easedProgress = progress * (2 - progress);
+      setDisplayScore(Math.floor(easedProgress * score));
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    window.requestAnimationFrame(step);
+  }, [score]);
 
   const verdictDescriptions = {
     'LIKELY PHISHING': 'Critical threat detected. Email contains multiple high-confidence phishing indicators including brand impersonation, deceptive URLs, and psychological urgency tactics.',
-    'SUSPICIOUS': 'High threat probability. Email presents suspicious characteristics matching credential harvesting or malicious domain patterns that warrant immediate investigation.',
-    'SAFE': 'Low to zero risk detected. Email passed all standard sender, domain, URL, and threat language checks with no significant indicators of compromise.',
+    'SUSPICIOUS': 'High threat probability. Email presents suspicious characteristics matching credential harvesting or malicious domain patterns.',
+    'SAFE': 'Low to zero risk detected. Email passed all standard sender, domain, URL, and threat language checks with no significant indicators.',
   };
 
   return (
     <div
-      className="rounded-2xl p-6 relative overflow-hidden"
+      className="p-8 transition-all duration-300 animate-fade-in"
       style={{
-        background: 'linear-gradient(135deg, #0d1424 0%, #0a1020 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        backgroundColor: '#FFFFFF',
+        border: 'none',
       }}
     >
-      {/* Subtle background glow matching score */}
-      <div
-        className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
-        style={{
-          background: `radial-gradient(circle, ${scoreColor}10 0%, transparent 70%)`,
-          transform: 'translate(30%, -30%)',
-        }}
-      />
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-12">
 
-      <div className="relative flex flex-col md:flex-row items-center gap-8">
+        {/* Animated Numerical Score Block */}
+        <div className="flex flex-col">
+          <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 mb-2 font-medium">
+            Forensic Risk Index
+          </span>
 
-        {/* ── SVG Gauge ── */}
-        <div className="relative flex items-center justify-center flex-shrink-0">
-          <svg className="w-48 h-48 -rotate-90" viewBox="0 0 180 180">
-            {/* Track */}
-            <circle
-              cx="90" cy="90" r={radius}
-              stroke="rgba(255,255,255,0.06)"
-              strokeWidth="14"
-              fill="transparent"
-            />
-            {/* Fill */}
-            <circle
-              cx="90" cy="90" r={radius}
-              stroke={scoreColor}
-              strokeWidth="14"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              fill="transparent"
-              className="transition-all duration-1000 ease-out"
-              style={{ filter: `drop-shadow(0 0 10px ${scoreColor}80)` }}
-            />
-          </svg>
-
-          {/* Center Label */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span
-              className="text-5xl font-black font-mono leading-none"
-              style={{ color: scoreColor }}
-            >
-              {score}
+          <div className="flex items-baseline gap-2">
+            <span className="text-6xl lg:text-7xl font-light font-mono text-neutral-900 tracking-tight leading-none">
+              {displayScore}
             </span>
-            <span className="text-[10px] font-mono text-slate-500 mt-1 tracking-wider">/ 100</span>
-            <span
-              className="text-[10px] font-black uppercase tracking-widest mt-1.5 px-2 py-0.5 rounded-full"
-              style={{
-                background: `${scoreColor}18`,
-                color: scoreColor,
-                border: `1px solid ${scoreColor}40`,
-                fontFamily: 'JetBrains Mono, monospace',
-              }}
-            >
-              {scoreLabel}
+            <span className="text-xl font-mono text-neutral-400">/ 100</span>
+          </div>
+
+          <div className="mt-4 flex items-center gap-3">
+            <ThreatBadge severity={severity} />
+            <span className="text-xs font-mono text-neutral-500">
+              {confidence}% Confidence Score
             </span>
           </div>
         </div>
 
-        {/* ── Verdict Details ── */}
-        <div className="flex-1 space-y-4 text-center md:text-left">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-            <ThreatBadge severity={severity} size="lg" />
-            <span
-              className="px-3 py-1.5 rounded-full text-xs font-mono font-bold"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                color: '#94a3b8',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}
-            >
-              {confidence}% Confidence
-            </span>
-          </div>
-
-          <div>
-            <p
-              className="text-[11px] uppercase tracking-widest font-semibold mb-1"
-              style={{ color: '#475569', fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              Automated SOC Verdict
-            </p>
-            <p className="text-2xl font-black tracking-tight flex items-center justify-center md:justify-start gap-2" style={{ color: scoreColor }}>
-              {verdict === 'LIKELY PHISHING' && <ShieldX className="w-6 h-6" style={{ animation: 'pulse-slow 2s infinite' }} />}
-              {verdict === 'SUSPICIOUS' && <ShieldAlert className="w-6 h-6" />}
-              {verdict === 'SAFE' && <CheckCircle2 className="w-6 h-6" />}
-              {verdict}
-            </p>
-          </div>
-
-          <p className="text-sm text-slate-400 leading-relaxed max-w-lg">
+        {/* Verdict Explanation */}
+        <div className="flex-1 max-w-xl space-y-3">
+          <span className="text-[11px] uppercase tracking-widest font-mono text-neutral-400 font-medium">
+            Automated SOC Verdict
+          </span>
+          <h2 className="text-2xl font-normal font-serif text-neutral-900">
+            {verdict}
+          </h2>
+          <p className="text-sm text-neutral-600 leading-relaxed font-sans">
             {verdictDescriptions[verdict] || verdictDescriptions['SAFE']}
           </p>
         </div>
 
-        {/* ── Score Breakdown ── */}
+        {/* Score Breakdown List */}
         {scoreBreakdown.length > 0 && (
-          <div
-            className="w-full md:w-72 rounded-xl p-4 flex-shrink-0 space-y-3"
-            style={{
-              background: 'rgba(0,0,0,0.3)',
-              border: '1px solid rgba(255,255,255,0.07)',
-            }}
-          >
-            <div
-              className="flex items-center justify-between text-[10px] font-mono font-bold uppercase pb-2"
-              style={{
-                borderBottom: '1px solid rgba(255,255,255,0.07)',
-                color: '#475569',
-              }}
-            >
-              <span>Score Breakdown</span>
-              <span style={{ color: '#10b981' }}>+{score} pts total</span>
+          <div className="w-full lg:w-72 space-y-3 pt-4 lg:pt-0 border-t lg:border-t-0 border-[#E5E5E0]">
+            <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-widest text-neutral-400">
+              <span>Factors</span>
+              <span>Impact</span>
             </div>
 
-            <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
+            <div className="space-y-2 font-mono text-xs text-neutral-700">
               {scoreBreakdown.map((item, idx) => (
-                <div key={idx} className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="text-[11px] truncate max-w-[150px]"
-                      style={{ color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}
-                      title={item.factor}
-                    >
-                      {item.factor}
-                    </span>
-                    <span
-                      className="text-[11px] font-bold font-mono flex-shrink-0"
-                      style={{ color: '#f87171' }}
-                    >
-                      +{item.points}
-                    </span>
-                  </div>
-                  <div className="progress-bar">
-                    <div
-                      className="progress-bar-fill"
-                      style={{
-                        width: `${Math.min((item.points / 30) * 100, 100)}%`,
-                        background: `linear-gradient(90deg, ${scoreColor}90, ${scoreColor})`,
-                      }}
-                    />
-                  </div>
+                <div key={idx} className="flex items-center justify-between py-1 border-b border-[#F4F4F0]">
+                  <span className="truncate max-w-[180px]" title={item.factor}>
+                    {item.factor}
+                  </span>
+                  <span className="font-semibold text-neutral-900">
+                    +{item.points}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

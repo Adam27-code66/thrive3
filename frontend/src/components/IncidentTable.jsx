@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ThreatBadge from './ThreatBadge';
-import { Search, Filter, ArrowUpDown, Eye } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 
-export default function IncidentTable({ incidents = [], onStatusChange }) {
+export default function IncidentTable({ incidents = [] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sevFilter, setSevFilter] = useState('ALL');
   const [verdictFilter, setVerdictFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState('date'); // 'date' | 'risk'
+  const [sortBy, setSortBy] = useState('date');
+  const [expandedId, setExpandedId] = useState(null);
+
+  const toggleExpand = (id, e) => {
+    // Don't expand if user clicked directly on a link
+    if (e.target.closest('a')) return;
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   const filtered = incidents.filter(item => {
     const matchesSearch =
@@ -25,211 +32,167 @@ export default function IncidentTable({ incidents = [], onStatusChange }) {
     return new Date(b.created_at) - new Date(a.created_at);
   });
 
-  const getRiskScoreStyle = (score) => {
-    if (score >= 81) return { background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' };
-    if (score >= 61) return { background: 'rgba(249,115,22,0.12)', color: '#fb923c', border: '1px solid rgba(249,115,22,0.3)' };
-    if (score >= 41) return { background: 'rgba(234,179,8,0.12)', color: '#fbbf24', border: '1px solid rgba(234,179,8,0.3)' };
-    return { background: 'rgba(34,197,94,0.12)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' };
-  };
-
-  const getStatusStyle = (status) => {
-    if (status === 'OPEN') return { background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.25)' };
-    if (status === 'INVESTIGATING') return { background: 'rgba(234,179,8,0.1)', color: '#fbbf24', border: '1px solid rgba(234,179,8,0.25)' };
-    return { background: 'rgba(100,116,139,0.1)', color: '#94a3b8', border: '1px solid rgba(100,116,139,0.2)' };
-  };
-
-  const getVerdictColor = (verdict) => {
-    if (verdict === 'LIKELY PHISHING') return '#f87171';
-    if (verdict === 'SUSPICIOUS') return '#fbbf24';
-    return '#4ade80';
-  };
-
-  const selectStyle = {
-    background: 'transparent',
-    color: '#94a3b8',
-    outline: 'none',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontFamily: 'JetBrains Mono, monospace',
-  };
-
   return (
-    <div
-      className="rounded-2xl overflow-hidden"
-      style={{ border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
-    >
+    <div className="space-y-6">
       {/* ── Search & Filter Toolbar ── */}
-      <div
-        className="p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3"
-        style={{
-          background: '#0d1424',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
-        }}
-      >
-        {/* Search */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-4 border-b border-[#E5E5E0]">
+        {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-neutral-400 absolute left-0 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search incident ID, sender, domain, subject..."
+            placeholder="Search by ID, sender, domain, or subject..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input-field pl-9"
-            style={{ paddingLeft: '36px', fontSize: '12px' }}
+            className="editorial-input pl-7"
+            style={{ paddingLeft: '28px' }}
           />
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div
-            className="flex items-center gap-2 px-3 py-2 rounded-xl"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
+        <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
+          <select
+            value={sevFilter}
+            onChange={(e) => setSevFilter(e.target.value)}
+            className="bg-transparent text-neutral-700 outline-none cursor-pointer py-1.5"
           >
-            <Filter className="w-3.5 h-3.5 text-slate-500" />
-            <select value={sevFilter} onChange={(e) => setSevFilter(e.target.value)} style={selectStyle}>
-              <option value="ALL" style={{ background: '#0d1424' }}>All Severities</option>
-              <option value="CRITICAL" style={{ background: '#0d1424' }}>Critical</option>
-              <option value="HIGH" style={{ background: '#0d1424' }}>High</option>
-              <option value="MEDIUM" style={{ background: '#0d1424' }}>Medium</option>
-              <option value="SAFE" style={{ background: '#0d1424' }}>Safe</option>
-            </select>
-          </div>
+            <option value="ALL">All Severities</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="SAFE">Safe</option>
+          </select>
 
-          <div
-            className="flex items-center gap-2 px-3 py-2 rounded-xl"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
+          <select
+            value={verdictFilter}
+            onChange={(e) => setVerdictFilter(e.target.value)}
+            className="bg-transparent text-neutral-700 outline-none cursor-pointer py-1.5"
           >
-            <select value={verdictFilter} onChange={(e) => setVerdictFilter(e.target.value)} style={selectStyle}>
-              <option value="ALL" style={{ background: '#0d1424' }}>All Verdicts</option>
-              <option value="LIKELY PHISHING" style={{ background: '#0d1424' }}>Phishing</option>
-              <option value="SUSPICIOUS" style={{ background: '#0d1424' }}>Suspicious</option>
-              <option value="SAFE" style={{ background: '#0d1424' }}>Safe</option>
-            </select>
-          </div>
+            <option value="ALL">All Verdicts</option>
+            <option value="LIKELY PHISHING">Phishing</option>
+            <option value="SUSPICIOUS">Suspicious</option>
+            <option value="SAFE">Safe</option>
+          </select>
 
           <button
             onClick={() => setSortBy(sortBy === 'risk' ? 'date' : 'risk')}
-            className="btn-ghost"
+            className="text-neutral-500 hover:text-neutral-900 transition-colors uppercase tracking-wider text-[11px]"
           >
-            <ArrowUpDown className="w-3.5 h-3.5 text-emerald-400" />
             Sort: {sortBy === 'risk' ? 'Risk Score' : 'Date'}
           </button>
         </div>
       </div>
 
-      {/* ── Table ── */}
-      <div className="overflow-x-auto" style={{ background: '#090d18' }}>
-        <table className="data-table">
+      {/* ── Table Ledger ── */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
           <thead>
-            <tr>
-              <th className="text-left">Incident</th>
-              <th className="text-left">Date</th>
-              <th className="text-left">Sender</th>
-              <th className="text-left">Domain</th>
-              <th className="text-center">Risk</th>
-              <th className="text-left">Severity</th>
-              <th className="text-left">Verdict</th>
-              <th className="text-left">Status</th>
-              <th className="text-right">Action</th>
+            <tr className="border-b border-[#E5E5E0] text-[11px] font-mono uppercase tracking-widest text-neutral-400">
+              <th className="py-3 px-4 font-normal">Incident</th>
+              <th className="py-3 px-4 font-normal">Date</th>
+              <th className="py-3 px-4 font-normal">Sender</th>
+              <th className="py-3 px-4 font-normal">Domain</th>
+              <th className="py-3 px-4 font-normal text-center">Score</th>
+              <th className="py-3 px-4 font-normal">Verdict</th>
+              <th className="py-3 px-4 font-normal text-right">Details</th>
             </tr>
           </thead>
-          <tbody>
-            {filtered.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  <Link
-                    to={`/incidents/${item.incident_id}`}
-                    className="font-mono font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
-                    style={{ textDecoration: 'none', fontSize: '12px' }}
+          <tbody className="divide-y divide-[#E5E5E0]">
+            {filtered.map((item) => {
+              const isExpanded = expandedId === item.id;
+              return (
+                <React.Fragment key={item.id}>
+                  {/* Main Row */}
+                  <tr
+                    onClick={(e) => toggleExpand(item.id, e)}
+                    className="editorial-row text-sm text-neutral-900"
                   >
-                    {item.incident_id}
-                  </Link>
-                </td>
-                <td
-                  className="whitespace-nowrap font-mono"
-                  style={{ color: '#475569', fontSize: '11px' }}
-                >
-                  {item.created_at}
-                </td>
-                <td
-                  className="max-w-[160px] truncate font-mono"
-                  style={{ color: '#94a3b8', fontSize: '12px' }}
-                  title={item.sender}
-                >
-                  {item.sender}
-                </td>
-                <td style={{ fontSize: '12px' }}>
-                  <span className="font-mono font-semibold text-slate-300">{item.domain || '—'}</span>
-                  {item.detected_brand && (
-                    <span className="block text-[9px] text-emerald-400 font-mono uppercase mt-0.5">
-                      Brand: {item.detected_brand}
-                    </span>
+                    <td className="py-4 px-4 font-mono font-medium text-neutral-900">
+                      <Link
+                        to={`/incidents/${item.incident_id}`}
+                        className="hover:underline text-neutral-900"
+                      >
+                        {item.incident_id}
+                      </Link>
+                    </td>
+                    <td className="py-4 px-4 font-mono text-xs text-neutral-500 whitespace-nowrap">
+                      {item.created_at ? item.created_at.slice(0, 10) : '—'}
+                    </td>
+                    <td className="py-4 px-4 font-mono text-xs text-neutral-600 max-w-[180px] truncate" title={item.sender}>
+                      {item.sender}
+                    </td>
+                    <td className="py-4 px-4 font-mono text-xs text-neutral-800">
+                      <span>{item.domain || '—'}</span>
+                      {item.detected_brand && (
+                        <span className="block text-[10px] text-neutral-500 font-mono uppercase">
+                          Target: {item.detected_brand}
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-center font-mono font-light text-base">
+                      {item.risk_score}/100
+                    </td>
+                    <td className="py-4 px-4">
+                      <ThreatBadge severity={item.severity} />
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <button
+                        type="button"
+                        className="text-neutral-400 hover:text-neutral-900 transition-colors p-1"
+                        aria-label="Expand details"
+                      >
+                        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </button>
+                    </td>
+                  </tr>
+
+                  {/* Expandable Inline Detail View */}
+                  {isExpanded && (
+                    <tr className="bg-[#F4F4F0] animate-fade-in">
+                      <td colSpan="7" className="p-6">
+                        <div className="space-y-3 font-sans text-xs text-neutral-700">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono text-[11px] uppercase tracking-widest text-neutral-500">
+                              Subject & Payload Context
+                            </span>
+                            <Link
+                              to={`/incidents/${item.incident_id}`}
+                              className="btn-editorial-secondary py-1 px-3 text-xs inline-flex items-center gap-1"
+                            >
+                              Open Full Dossier <ArrowRight className="w-3 h-3" />
+                            </Link>
+                          </div>
+
+                          <p className="font-medium text-sm text-neutral-900">
+                            {item.subject || '(No Subject)'}
+                          </p>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-[#E5E5E0] font-mono text-xs">
+                            <div>
+                              <span className="text-neutral-400 block text-[10px] uppercase">Recipient</span>
+                              <span>{item.recipient || 'employee@company.com'}</span>
+                            </div>
+                            <div>
+                              <span className="text-neutral-400 block text-[10px] uppercase">Status</span>
+                              <span>{item.status}</span>
+                            </div>
+                            <div>
+                              <span className="text-neutral-400 block text-[10px] uppercase">Verdict Verdict</span>
+                              <span>{item.verdict}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                   )}
-                </td>
-                <td className="text-center">
-                  <span
-                    className="inline-block px-2.5 py-1 rounded-full font-black font-mono text-xs"
-                    style={getRiskScoreStyle(item.risk_score)}
-                  >
-                    {item.risk_score}
-                  </span>
-                </td>
-                <td>
-                  <ThreatBadge severity={item.severity} size="sm" />
-                </td>
-                <td>
-                  <span
-                    className="font-bold text-xs font-mono"
-                    style={{ color: getVerdictColor(item.verdict) }}
-                  >
-                    {item.verdict}
-                  </span>
-                </td>
-                <td>
-                  <span
-                    className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase font-mono"
-                    style={getStatusStyle(item.status)}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-                <td className="text-right">
-                  <Link
-                    to={`/incidents/${item.incident_id}`}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all"
-                    style={{
-                      background: 'rgba(16,185,129,0.08)',
-                      color: '#34d399',
-                      border: '1px solid rgba(16,185,129,0.2)',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(16,185,129,0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(16,185,129,0.08)';
-                    }}
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    View
-                  </Link>
-                </td>
-              </tr>
-            ))}
+                </React.Fragment>
+              );
+            })}
 
             {filtered.length === 0 && (
               <tr>
-                <td colSpan="9" className="py-12 text-center" style={{ color: '#334155' }}>
-                  <div className="space-y-2">
-                    <p className="font-mono text-sm">No matching incidents found</p>
-                    <p className="text-xs text-slate-600">Try adjusting your search or filter criteria</p>
-                  </div>
+                <td colSpan="7" className="py-12 text-center text-neutral-400 font-mono text-xs">
+                  No matching incidents found
                 </td>
               </tr>
             )}
@@ -237,17 +200,9 @@ export default function IncidentTable({ incidents = [], onStatusChange }) {
         </table>
       </div>
 
-      {/* ── Footer Count ── */}
-      <div
-        className="px-4 py-3 flex items-center justify-between"
-        style={{
-          background: '#0d1424',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-        }}
-      >
-        <span className="text-xs font-mono" style={{ color: '#334155' }}>
-          Showing {filtered.length} of {incidents.length} incidents
-        </span>
+      {/* Count Summary */}
+      <div className="text-xs font-mono text-neutral-400 pt-2 border-t border-[#E5E5E0]">
+        Showing {filtered.length} of {incidents.length} threat records
       </div>
     </div>
   );
